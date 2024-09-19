@@ -10,10 +10,11 @@ import (
 	"testing"
 )
 
-func TestRouter(t *testing.T) {
+func TestNotFound(t *testing.T) {
 	router := httprouter.New()
-	router.GET("/", func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-		fmt.Fprint(w, "Hello World")
+
+	router.NotFound = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprint(w, "Not Found")
 	})
 	r := httptest.NewRequest("GET", "http://localhost:8080/", nil)
 	recorder := httptest.NewRecorder()
@@ -23,6 +24,6 @@ func TestRouter(t *testing.T) {
 	response := recorder.Result()
 	body, _ := io.ReadAll(response.Body)
 
-	assert.Equal(t, "Hello World", string(body))
+	assert.Equal(t, "Not Found", string(body))
 
 }
